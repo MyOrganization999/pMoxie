@@ -1,10 +1,10 @@
 name: Deploy to Salesforce Intdev
 
-on: 
-  pull_request:
-    types: [ closed ]
-    branches:
-      - "pDeployment_Intdev"
+on: [push]
+  # pull_request:
+  #   types: [ closed ]
+  #   branches:
+  #     - "pDeployment_Intdev"
     paths:
       - 'force-app/**'
 
