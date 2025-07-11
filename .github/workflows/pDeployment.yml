@@ -17,7 +17,7 @@ jobs:
         run: npm install -g @salesforce/cli
 
       - name: Authorize Salesforce Org
-        run: sf org login sfdx-url --sfdx-url ${{force://PlatformCLI::5Aep861GSSd.UBhhUKVe9ONt3cyab4JPDGXVD9PW3BWaC9t3VnQhAS0KBPXK2GTUb2VJqxt.a8TdNyLp6P55lXv@puttisreadingroom-dev-ed.develop.my.salesforce.com}} --set-default-dev-hub --set-default
+        run: sf org login sfdx-url --sfdx-url ${{"force://PlatformCLI::5Aep861GSSd.UBhhUKVe9ONt3cyab4JPDGXVD9PW3BWaC9t3VnQhAS0KBPXK2GTUb2VJqxt.a8TdNyLp6P55lXv@puttisreadingroom-dev-ed.develop.my.salesforce.com"}} --set-default-dev-hub --set-default
 
       - name: Deploy to Salesforce
         run: sf project deploy start --metadata-dir force-app
