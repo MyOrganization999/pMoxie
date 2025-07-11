@@ -17,7 +17,7 @@ jobs:
         run: npm install -g @salesforce/cli
 
       - name: Create sfdx-auth.txt from secret
-        run: echo "${{ force://PlatformCLI::5Aep861GSSd.UBhhUKVe9ONt3cyab4JPDGXVD9PW3BWaC9t3VnQhAS0KBPXK2GTUb2VJqxt.a8TdNyLp6P55lXv@puttisreadingroom-dev-ed.develop.my.salesforce.com }}"
+        run: echo "${{ 'force://PlatformCLI::5Aep861GSSd.UBhhUKVe9ONt3cyab4JPDGXVD9PW3BWaC9t3VnQhAS0KBPXK2GTUb2VJqxt.a8TdNyLp6P55lXv@puttisreadingroom-dev-ed.develop.my.salesforce.com' }}"
 
       - name: Authorize Salesforce Org
         run: sfdx auth:sfdxurl:store -f sfdx-auth.txt --setalias DevHub --setdefaultdevhubvmsyadav@prr.com
