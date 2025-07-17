@@ -1,68 +1,37 @@
-name: Deploy to Salesforce Intdev
+name: OMS IntDev Deployment
 
 on:
+  workflow_dispatch: {}
   pull_request:
-    types: [ closed ]
     branches:
-      - "pDeployment_Intdev"
+      - pDeployment_IntDev
     paths:
       - 'force-app/**'
-
+    types: [closed]
+  
 jobs:
-  validate:
+  DeployToIntDev:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
+    environment: IntDev
     steps:
       - uses: actions/checkout@v3
-      - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
-        uses: jawills/sf-deploy@v1.0
-        with:
-          SFDX_AUTH_URL: "force://PlatformCLI::5Aep861GSSd.UBhhUKVe9ONt3cyab4JPDGXVD9PW3BWaC9t3VnQhAS0KBPXK2GTUb2VJqxt.a8TdNyLp6P55lXv@puttisreadingroom-dev-ed.develop.my.salesforce.com"
-          DRY_RUN: true
-
-      - name: 'Deploy'
+      - name: Install Salesforce CLI
+        shell: bash
         run: |
-          sf project deploy start -d force-app/ -l RunLocalTests -w 30
-
-  # deploy:abc
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-
-  #     - name: Setup Node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: "14"
-
-  #     - name: Cache node modules
-  #       uses: actions/cache@v3
-  #       id: npm_cache_id
-  #       with:
-  #         path: node_modules
-  #         key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-npm-cache-
-  #           ${{ runner.os }}-
-
-  #     - name: Install Dependencies
-  #       if: steps.npm_cache_id.outputs.cache-hit != 'true'
-  #       run: npm ci
-
-  #     - name: SFDX Auth
-  #       env:
-  #         SFDX_JWT_KEY: ${{ secrets.SFDX_JWT_KEY }}
-  #         SFDX_CLIENT_ID: ${{ secrets.SFDX_CLIENT_ID }}
-  #       run: |
-  #         echo "${SFDX_JWT_KEY}" > server.key
-  #         npx sfdx force:auth:jwt:grant --clientid "${SFDX_CLIENT_ID}" --jwtkeyfile server.key --username gfarb@github.dreamforce --setdefaultdevhubusername
-  #         npx sfdx force:org:display --json -u gfarb@github.dreamforce > sfdx-auth.json
-  #         rm server.key
-
-  #     - name: Build, Test & Deploy
-  #       uses: gfarb/sfdx-deploy@v1
-  #       env:
-  #         TARGET_USERNAME: gfarb@github.dreamforce
-  #         SOURCE_PATH: force-app
-  #         DESTRUCTIVE_CHANGES: destructive-changes
-  #         TEST_LEVEL: RunLocalTests
-  #         WAIT: 200
+          npm install -g @salesforce/cli
+          sf --version
+      - name: Login to Environment
+        shell: bash
+        run: |
+          sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
+      - name: Deploy to Environment
+        shell: bash
+        run: |
+          deployFlags=(
+              --manifest manifest/package.xml
+              --test-level RunSpecifiedTests 
+              --tests ${{ vars.TEST_CLASSES }}
+              --verbose
+            )
+          sf project deploy start "${deployFlags[@]}"
