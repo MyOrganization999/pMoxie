@@ -1,25 +1,37 @@
-name: Salesforce Deployment
+name: Moxie IntDev Deployment
+
 on:
-  push:
+  workflow_dispatch: {}
+  pull_request:
     branches:
-      - main
-
+      - pDeployment_Intdev
+    paths:
+      - 'force-app/**'
+    types: [closed]
+  
 jobs:
-  deploy:
+  DeployToIntDev:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
-
+    environment: IntDev
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v3
       - name: Install Salesforce CLI
-        run: npm install -g @salesforce/cli
-
-      - name: Create sfdx-auth.txt from secret
-        run: echo "${{ 'force://PlatformCLI::5Aep861GSSd.UBhhUKVe9ONt3cyab4JPDGXVD9PW3BWaC9t3VnQhAS0KBPXK2GTUb2VJqxt.a8TdNyLp6P55lXv@puttisreadingroom-dev-ed.develop.my.salesforce.com' }}"
-
-      - name: Authorize Salesforce Org
-        run: sfdx auth:sfdxurl:store -f --setalias DevHub --setdefaultdevhubusername
-        
-      - name: Deploy to Salesforce
-        run: sfdx force:source:deploy -p force-app/main/default -u DevHub --wait 10
+        shell: bash
+        run: |
+          npm install -g @salesforce/cli
+          sf --version
+      - name: Login to Environment
+        shell: bash
+        run: |
+          sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
+      - name: Deploy to Environment
+        shell: bash
+        run: |
+          deployFlags=(
+              --manifest manifest/package.xml
+              --test-level RunSpecifiedTests 
+              --tests ${{ vars.TEST_CLASSES }}
+              --verbose
+            )
+          sf project deploy start "${deployFlags[@]}"
