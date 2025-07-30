@@ -4,5 +4,8 @@
         <members>*</members>
         <name>RemotesiteSetting</name>
     </types>
+    <types>
+        <name>CustomLabels</name>
+    </types>
     <version>62.0</version>
 </Package>
