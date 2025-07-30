@@ -3,6 +3,10 @@
     <types>
         <members>*1</members>
         <members>*2</members>
+        <name>RemotesiteSetting</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>CustomLabels</name>
     </types>
     <version>62.0</version>
