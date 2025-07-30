@@ -3,6 +3,8 @@
     <types>
         <members>*1</members>
         <members>*2</members>
+        <members>*3</members>
+        <members>*4</members>
         <name>RemotesiteSetting</name>
     </types>
     <types>
