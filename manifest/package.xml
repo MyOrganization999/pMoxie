@@ -4,17 +4,5 @@
         <members>*</members>
         <name>RemotesiteSetting</name>
     </types>
-    <types>
-        <members>*</members>
-        <name>CustomLabels</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>NamedCredential</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>CustomMetadata</name>
-    </types>
     <version>62.0</version>
 </Package>
