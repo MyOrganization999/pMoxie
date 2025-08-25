@@ -9,6 +9,9 @@
     </types>
     <types>
         <members>*</members>
+        <members>*1*</members>
+        <members>*2*</members>
+        <members>*3*</members>
         <name>CustomLabels</name>
     </types>
     <version>62.0</version>
